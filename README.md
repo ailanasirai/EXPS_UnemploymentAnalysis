@@ -8,21 +8,21 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-complete-brightgreen)
 
-An end-to-end analysis of the US labor market from 2000 to 2026, built on official Federal Reserve (FRED) data. This project investigates how the COVID-19 shock compares to the 2008 financial crisis, tracks a structural shift in labor force participation, and closes with a deployed SARIMA forecasting model that projects unemployment 3–18 months ahead.
+### What if the unemployment rate is lying to you?
 
-**Live app:** [US Unemployment Rate Forecaster →](https://huggingface.co/spaces/ailanasirai/unemployment-rate-forecaster)
-**Notebook:** [EXPS_UnemploymentAnalysis.ipynb](./EXPS_UnemploymentAnalysis.ipynb)
+A single number can't tell you how *fast* a crisis hit, how *long* recovery took, or whether people quietly gave up looking for work altogether. This project pulls apart 26 years of official Federal Reserve data to find out — and ends with a live model that forecasts where the rate is headed next.
+
+**🚀 Live app:** [US Unemployment Rate Forecaster →](https://huggingface.co/spaces/ailanasirai/unemployment-rate-forecaster)
+**📓 Notebook:** [EXPS_UnemploymentAnalysis.ipynb](./EXPS_UnemploymentAnalysis.ipynb)
 
 ---
 
-## Why This Project
+## The Four Questions This Project Answers
 
-Unemployment rate is one of the most quoted economic numbers, but on its own it hides more than it reveals. A single percentage doesn't say how fast a shock hit, how long recovery took, or whether people simply stopped looking for work. This project pulls apart the headline number using real Federal Reserve data to answer four concrete questions:
-
-1. How did COVID-19 actually compare to the 2008 financial crisis, in speed and severity?
-2. Which crisis was harder to recover from?
-3. Is the labor force actually shrinking, and does the unemployment rate hide that?
-4. Can a statistical model meaningfully forecast where the rate is headed next?
+1. **Speed** — How did COVID-19 actually compare to the 2008 financial crisis?
+2. **Recovery** — Which crisis was harder to bounce back from?
+3. **The hidden number** — Is the labor force quietly shrinking behind a "healthy" unemployment rate?
+4. **The future** — Can a statistical model meaningfully forecast where the rate goes next?
 
 ---
 
@@ -50,7 +50,7 @@ flowchart LR
 
 ## Data Source
 
-All data was pulled directly from the [FRED API](https://fred.stlouisfed.org/) (Federal Reserve Bank of St. Louis), the same source economists and policy analysts use professionally.
+All data was pulled directly from the [FRED API](https://fred.stlouisfed.org/) (Federal Reserve Bank of St. Louis) — the same source economists and policy analysts use professionally, not a static Kaggle download.
 
 | Series | What it measures |
 |---|---|
@@ -61,83 +61,81 @@ All data was pulled directly from the [FRED API](https://fred.stlouisfed.org/) (
 
 ---
 
-## Problem → Approach → Insight
+## 1. Two Minutes vs. Two Years — The Speed Gap
 
-### 1. How fast did COVID-19 hit, compared to 2008?
+**The question:** A number alone doesn't show *how fast* a shock hit — and speed is what decides whether policy can move gradually or has to move immediately.
 
-**Problem:** Unemployment numbers alone don't communicate the speed of a shock, and speed is what determines whether policy can respond gradually or has to move immediately.
+**What I did:** Isolated both crisis windows and measured the time from baseline to peak unemployment.
 
-**Approach:** Isolated both crisis windows and measured the time from baseline to peak unemployment.
+**What I found:** COVID-19 pushed unemployment from 3.5% to 14.8% in just **2 months**. The 2008 financial crisis took roughly **24 months** to add a smaller 5.5 points. COVID wasn't just a bigger shock — it was a different *kind* of shock entirely, one that left no room for the slower policy response used in 2008.
 
-**Insight:** COVID-19 pushed unemployment from 3.5% to 14.8% in just **2 months**. The 2008 financial crisis took roughly **24 months** to add a smaller 5.5 points. COVID wasn't just a bigger shock, it was a fundamentally different *kind* of shock, one that required emergency-speed policy response rather than the more gradual measures used in 2008.
-
-![Unemployment trend with both crises highlighted](images/01_unemployment_trend.png)
+![Unemployment trend with both crises highlighted](unemployment_trend.png)
 
 ---
 
-### 2. Which crisis was actually harder to recover from?
+## 2. The Bigger Shock Wasn't the Slower Recovery
 
-**Problem:** A shock's peak severity doesn't necessarily predict how long the economy takes to heal. This matters directly for policy design — a fast, deep shock and a slow, grinding one need different kinds of support.
+**The question:** Does hitting harder mean taking longer to heal? This directly shapes how policy support should be designed.
 
-**Approach:** Measured months from peak unemployment back down to each crisis's pre-crisis baseline.
+**What I did:** Measured months from peak unemployment back down to each crisis's pre-crisis baseline.
 
-**Insight:** Despite being far less severe at its peak, the 2008 crisis took **71 months** (nearly 6 years) to fully recover. COVID, despite hitting far harder, recovered in **27 months**. This suggests 2008 was a structural crisis requiring the economy to rebuild credit and housing markets from the ground up, while COVID behaved more like an enforced pause that unwound quickly once restrictions lifted.
+**What I found:** Despite being far less severe at its peak, the 2008 crisis took **71 months** — nearly 6 years — to fully recover. COVID, despite hitting much harder, recovered in **27 months**. 2008 was a structural crisis that required rebuilding credit and housing markets from scratch; COVID behaved more like an enforced pause that unwound quickly once restrictions lifted.
 
-![Recovery speed comparison bar charts](images/02_recovery_comparison.png)
-
----
-
-### 3. Does unemployment follow a seasonal pattern?
-
-**Problem:** Before drawing conclusions about "the economy," it's worth ruling out a simpler explanation: maybe unemployment just moves with the calendar.
-
-**Approach:** Excluded both crisis windows and averaged unemployment by calendar month across the remaining years.
-
-**Insight:** Monthly averages stayed within a narrow **5.09%–5.22%** band. There is no meaningful seasonal effect once crisis years are removed — unemployment in the US is driven almost entirely by macroeconomic shocks, not the time of year.
-
-![Average unemployment rate by month](images/03_seasonal_pattern.png)
+![Recovery speed comparison bar charts](recovery_comparison.png)
 
 ---
 
-### 4. Is the labor market's recovery as complete as the unemployment rate suggests?
+## 3. No, Unemployment Doesn't Care What Month It Is
 
-**Problem:** Unemployment rate only counts people actively searching for work. If people give up searching, they vanish from the number entirely — the rate can look "recovered" while the workforce has actually shrunk.
+**The question:** Before crediting "the economy" for anything, rule out the simple explanation — maybe it's just the calendar.
 
-**Approach:** Tracked labor force participation rate separately from the unemployment rate, both through COVID and in the years since.
+**What I did:** Excluded both crisis windows and averaged unemployment by calendar month across the remaining years.
 
-**Insight:** Participation dropped from 63.3% to a low of 60.1% during COVID and, even years later, remains about **1.9 percentage points below its pre-COVID level**. Part of this reflects a structural decline already underway since 2000, but COVID clearly accelerated it. A low unemployment rate can coexist with a shrinking workforce — participation rate deserves equal billing as a headline economic indicator.
+**What I found:** Monthly averages stayed within a razor-thin **5.09%–5.22%** band. There's no meaningful seasonal effect once crisis years are removed — US unemployment is driven almost entirely by macroeconomic shocks, not the time of year.
 
-![Labor force participation rate trend](images/04_participation_trend.png)
-
----
-
-### 5. Can unemployment be forecast with any real accuracy?
-
-**Problem:** Descriptive analysis explains the past. The more useful question for planning is whether the underlying trend and seasonality in this data can support a genuine forward-looking forecast.
-
-**Approach:** Built a **SARIMA(1,1,1)(1,1,1,12)** time-series model trained on data from 2010 onward (excluding the COVID anomaly from the training signal), then validated it on 12 months of data the model never saw during training.
-
-**Insight:** The model achieved a **Test MAE of 0.54 percentage points** and **Test MAPE of 12.6%** on unseen data — a tight margin for a macroeconomic series this volatile. The validated model was then retrained on the full dataset and deployed as an interactive forecasting tool.
-
-![Forecast vs actual on held-out test data](images/05_forecast_accuracy.png)
+![Average unemployment rate by month](seasonal_pattern.png)
 
 ---
 
-## Interactive Forecasting Tool
+## 4. The Number That's Been Quietly Hiding the Real Story
 
-The final SARIMA model is deployed as a live Gradio application on Hugging Face Spaces. Users select a forecast horizon (3–18 months) and instantly see the projected unemployment rate, a 95% confidence interval, and a month-by-month breakdown.
+**The question:** Unemployment rate only counts people *actively searching*. If people give up and stop looking, they vanish from the number completely — the rate can look "recovered" while the workforce has actually shrunk.
 
-**Try it live:** [huggingface.co/spaces/ailanasirai/unemployment-rate-forecaster](https://huggingface.co/spaces/ailanasirai/unemployment-rate-forecaster)
+**What I did:** Tracked labor force participation rate separately from the unemployment rate, both through COVID and in the years since.
 
-![Deployed Gradio forecasting dashboard](images/06_gradio_dashboard.png)
+**What I found:** Participation dropped from 63.3% to a low of 60.1% during COVID and, years later, **still sits about 1.9 percentage points below its pre-COVID level**. Part of this is a structural decline that was already underway since 2000 — but COVID clearly accelerated it. A low unemployment rate can coexist with a shrinking workforce. This is the single most important chart in this project.
+
+![Labor force participation rate trend](participation_trend.png)
 
 ---
 
-## Key Takeaways for Policy
+## 5. Teaching a Model to See Around the Corner
 
-- **Fast-moving shocks need automatic stabilizers.** COVID's 2-month collapse left no time for gradual legislative response — policies that trigger automatically outperform ones that require new legislation each time.
-- **Structural crises need sustained, multi-year support**, not front-loaded stimulus, given how much longer they take to resolve (71 months vs. 27).
-- **Labor force participation should be tracked as a headline indicator alongside unemployment rate**, since it captures discouraged workers the unemployment rate misses entirely.
+**The question:** Descriptive analysis explains the past. Can the underlying trend and seasonality actually support a genuine forward-looking forecast?
+
+**What I did:** Built a **SARIMA(1,1,1)(1,1,1,12)** time-series model trained on data from 2010 onward (deliberately excluding the COVID anomaly from the training signal), then validated it on 12 months of data the model never saw during training.
+
+**What I found:** The model landed a **Test MAE of 0.54 percentage points** and **Test MAPE of 12.6%** on completely unseen data — a tight margin for a macroeconomic series this volatile. The validated model was then retrained on the full dataset and shipped into production.
+
+![Forecast vs actual on held-out test data](forecast_accuracy.png)
+
+---
+
+## Try It Yourself — Live Forecasting Dashboard
+
+The final SARIMA model runs live behind a Gradio interface on Hugging Face Spaces. Pick a forecast horizon from 3 to 18 months and instantly get the projected unemployment rate, a 95% confidence interval, and a month-by-month breakdown — no code required.
+
+**👉 [Launch the live app](https://huggingface.co/spaces/ailanasirai/unemployment-rate-forecaster)**
+
+![Deployed Gradio forecasting dashboard](gradio_dashboard.png)
+
+---
+
+## So What Should Policy Actually Do With This?
+
+- **Build automatic stabilizers, not slow legislation.** COVID's 2-month collapse left zero time for gradual response — triggers that fire automatically beat policies that need a new vote every time.
+- **Give structural crises structural timelines.** 2008-style recoveries take years, not quarters (71 months vs. 27) — front-loaded stimulus alone won't cut it.
+- **Watch participation, not just unemployment.** It captures the discouraged workers the headline number completely misses.
 
 ---
 
@@ -152,7 +150,12 @@ The final SARIMA model is deployed as a live Gradio application on Hugging Face 
 EXPS_UnemploymentAnalysis/
 │
 ├── EXPS_UnemploymentAnalysis.ipynb Full analysis notebook
-├── images/ Charts referenced in this README
+├── unemployment_trend.png Chart: 26-year trend, both crises
+├── recovery_comparison.png Chart: 2008 vs COVID recovery speed
+├── seasonal_pattern.png Chart: monthly seasonality check
+├── participation_trend.png Chart: labor force participation
+├── forecast_accuracy.png Chart: SARIMA validation results
+├── gradio_dashboard.png Screenshot: deployed live app
 ├── LICENSE
 └── README.md
 
