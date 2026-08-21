@@ -28,22 +28,14 @@ Unemployment rate is one of the most quoted economic numbers, but on its own it 
 
 ## Methodology / Pipeline
 
-┌─────────────────┐ ┌──────────────────┐ ┌───────────────────┐
-│ FRED API │────▶│ Data Cleaning │────▶│ Exploratory │
-│ UNRATE, CIVPART │ │ Resample weekly │ │ Data Analysis │
-│ ICSA, PAYEMS │ │ → monthly, │ │ Trend, COVID │
-│ │ │ forward-fill │ │ shock, seasonal │
-│ │ │ gaps │ │ patterns │
-└─────────────────┘ └──────────────────┘ └─────────┬─────────┘
-│
-┌─────────────────┐ ┌──────────────────┐ ┌─────────▼─────────┐
-│ Deployment │◀────│ Model │◀────│ Recovery & │
-│ Gradio + Hugging │ │ SARIMA(1,1,1) │ │ Participation │
-│ Face Spaces │ │ (1,1,1,12) │ │ Comparison │
-│ Interactive │ │ train/test split │ │ 2008 vs COVID │
-│ forecasting UI │ │ MAE 0.54pp │ │ │
-└─────────────────┘ └──────────────────┘ └───────────────────┘
-
+```mermaid
+flowchart LR
+    A[FRED API<br/>UNRATE · CIVPART<br/>ICSA · PAYEMS] --> B[Data Cleaning<br/>Resample weekly → monthly<br/>Forward-fill gaps]
+    B --> C[Exploratory Analysis<br/>Trend · COVID shock<br/>Seasonal patterns]
+    C --> D[Comparative Analysis<br/>2008 vs COVID<br/>Recovery & participation]
+    D --> E[SARIMA Model<br/>1,1,1 x 1,1,1,12<br/>Train/test split · MAE 0.54pp]
+    E --> F[Deployment<br/>Gradio + Hugging Face<br/>Interactive forecasting UI]
+```
 
 **Stages in order:**
 
@@ -158,16 +150,19 @@ The final SARIMA model is deployed as a live Gradio application on Hugging Face 
 ## Repository Structure
 
 EXPS_UnemploymentAnalysis/
-├── EXPS_UnemploymentAnalysis.ipynb # Full analysis notebook
-├── images/ # Charts referenced in this README
+│
+├── EXPS_UnemploymentAnalysis.ipynb Full analysis notebook
+├── images/ Charts referenced in this README
 ├── LICENSE
 └── README.md
+
 
 ---
 
 ## Author
 
 **Aila Nasir**
-[LinkedIn](https://linkedin.com/in/ailanasirai) 
-[GitHub](https://github.com/ailanasirai) 
-[Hugging Face](https://huggingface.co/ailanasirai)
+
+- 🔗 [LinkedIn](https://linkedin.com/in/ailanasirai)
+- 💻 [GitHub](https://github.com/ailanasirai)
+- 🤗 [Hugging Face](https://huggingface.co/ailanasirai)
