@@ -149,14 +149,23 @@ The final SARIMA model runs live behind a Gradio interface on Hugging Face Space
 
 EXPS_UnemploymentAnalysis/
 │
+
 ├── EXPS_UnemploymentAnalysis.ipynb Full analysis notebook
+
 ├── unemployment_trend.png Chart: 26-year trend, both crises
+
 ├── recovery_comparison.png Chart: 2008 vs COVID recovery speed
+
 ├── seasonal_pattern.png Chart: monthly seasonality check
+
 ├── participation_trend.png Chart: labor force participation
+
 ├── forecast_accuracy.png Chart: SARIMA validation results
+
 ├── gradio_dashboard.png Screenshot: deployed live app
+
 ├── LICENSE
+
 └── README.md
 
 
